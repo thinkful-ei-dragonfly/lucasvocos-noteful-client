@@ -2,6 +2,7 @@ import React from 'react'
 import ValidationError from '../ValidationError/ValidationError'
 import NotefulContext from '../NotefulContext/NotefulContext'
 import PropTypes from 'prop-types'
+import config from '../config'
 
 
 export default class AddNote extends React.Component {
@@ -76,15 +77,14 @@ export default class AddNote extends React.Component {
     const {name, content} = this.state;
     const folder = e.target.folder.value;
     const now = new Date();
-    // We weren't previously providing a modified date, now we are
     const noteBody = {
-      folderId: folder,
+      folder_id: folder,
       name: name,
       content: content,
       modified: now}
     const POSTbody = JSON.stringify(noteBody)
     let error = false;
-    fetch('http://localhost:9090/notes', {
+    fetch(`${config.API_ENDPOINT}notes`, {
       method: 'POST',
       headers: {'content-type':'application/json'},
       body: POSTbody

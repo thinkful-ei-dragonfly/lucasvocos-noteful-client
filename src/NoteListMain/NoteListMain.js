@@ -11,6 +11,7 @@ export default class NoteListMain extends React.Component {
   static contextType = NotefulContext || {};
 
   render(){
+    console.log(this.props);
     return (
       <section className='NoteListMain'>
         <ul>

@@ -1,6 +1,7 @@
 import React from 'react'
 import ValidationError from '../ValidationError/ValidationError'
 import PropTypes from 'prop-types'
+import config from '../config'
 
 export default class AddFolder extends React.Component {
   constructor(props){
@@ -19,21 +20,21 @@ export default class AddFolder extends React.Component {
     this.setState({name}, () => this.validateName(name));
   }
   validateName(folder) {
-       const fieldErrors = {...this.state.validationMessages};
-       let nameValid = true;
-       let hasError = false
+    const fieldErrors = {...this.state.validationMessages};
+    let nameValid = true;
+    let hasError = false
 
-       folder = folder.replace(/[\s-]/g, ''); // Remove whitespace and dashes
-       if (folder.length < 3 || folder.length === 0) { // Check if it's 9 characters long
-           fieldErrors.name = 'Folder name must be at least three characters long';
-           nameValid = false;
-           hasError = true
-       } else {
-         fieldErrors.name = '';
-         nameValid = true
-         hasError = false
-       }
-       this.setState({validationMessages: fieldErrors, nameValid: !hasError}, this.formValid);
+    folder = folder.replace(/[\s-]/g, ''); // Remove whitespace and dashes
+    if (folder.length < 3 || folder.length === 0) { // Check if it's 9 characters long
+      fieldErrors.name = 'Folder name must be at least three characters long';
+      nameValid = false;
+      hasError = true
+    } else {
+      fieldErrors.name = '';
+      nameValid = true
+      hasError = false
+    }
+    this.setState({ validationMessages: fieldErrors, nameValid: !hasError }, this.formValid);
   }
   formValid() {
     this.setState({
@@ -46,18 +47,19 @@ export default class AddFolder extends React.Component {
     const nameObj = { name: name}
     const POSTbody = JSON.stringify(nameObj)
     let error = false;
-    fetch('http://localhost:9090/folders', {
+    fetch(`${config.API_ENDPOINT}folders`, {
       method: 'POST',
       headers: {'content-type':'application/json'},
       body: POSTbody
+    })
+      .then(res => {
+        if (!res.ok) {
+          error = { code: res.statusText }
+        }
+        // need to figure out how to send the user back
+        this.props.history.goBack()
       })
-    .then(res => {
-      if (!res.ok) {
-        error = {code: res.statusText}
-      }
-      return res.json();
-      })
-    .catch(error => console.log(error))
+      .catch(error => console.log(error))
   }
   render(){
     const {nameValid, validationMessages} = this.state
