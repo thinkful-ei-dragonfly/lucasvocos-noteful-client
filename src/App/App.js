@@ -112,9 +112,9 @@ class App extends Component {
                       notes,
                       folderId
                     )
+                    // Somehow I'm not sending the right data to the /api/folder/:folder_id endpoint. It's just getting all notes
                     return (
                       <NoteListMain
-                        {/* Somehow I'm not sending the right data to the /api/folder/:folder_id endpoint. It's just getting all notes*/}
                         {...routeProps}
                         notes={notesForFolder}
                       />
