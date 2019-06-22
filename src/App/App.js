@@ -83,17 +83,19 @@ class App extends Component {
         const {notes, folders} = this.state;
         return (
             <>
-                {['/'].map(path => (
+                {['/', '/folder/:folderId'].map(path => (
                     <Route
                         exact
                         key={path}
                         path={path}
                         render={routeProps => {
-                            const { folderId } = routeProps.match.params;
+                            const {folderId} = routeProps.match.params;
                             const notesForFolder = getNotesForFolder(
                                 notes,
                                 folderId
                             );
+                            
+
                             return (
                                 <NoteListMain
                                     {...routeProps}
@@ -103,24 +105,6 @@ class App extends Component {
                         }}
                     />
                 ))}
-                <Route
-                  exact
-                  path="/folder/:folderId"
-                  render={routeProps => {
-                    const{ folderId } = parseInt(routeProps.match.params)
-                    const notesForFolder = getNotesForFolder(
-                      notes,
-                      folderId
-                    )
-                    // Somehow I'm not sending the right data to the /api/folder/:folder_id endpoint. It's just getting all notes
-                    return (
-                      <NoteListMain
-                        {...routeProps}
-                        notes={notesForFolder}
-                      />
-                    )
-                  }}
-                />
                 <Route
                     path="/note/:noteId"
                     render={routeProps => {

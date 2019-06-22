@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import config from '../config'
 
 export default class AddFolder extends React.Component {
-  constructor(props){
+  constructor (props) {
     super(props)
     this.state = {
       name: '',
@@ -12,16 +12,16 @@ export default class AddFolder extends React.Component {
       formValid: false,
       hasError: false,
       validationMessages: {
-        name: '',
+        name: ''
       }
     }
   }
-  setName(name) {
-    this.setState({name}, () => this.validateName(name));
+  setName (name) {
+    this.setState({ name }, () => this.validateName(name))
   }
   validateName(folder) {
-    const fieldErrors = {...this.state.validationMessages};
-    let nameValid = true;
+    const fieldErrors = { ...this.state.validationMessages }
+    let nameValid = true
     let hasError = false
 
     folder = folder.replace(/[\s-]/g, ''); // Remove whitespace and dashes
@@ -56,21 +56,20 @@ export default class AddFolder extends React.Component {
         if (!res.ok) {
           error = { code: res.statusText }
         }
-        // need to figure out how to send the user back
-        this.props.history.goBack()
+        window.location.href = '/'
       })
       .catch(error => console.log(error))
   }
-  render(){
-    const {nameValid, validationMessages} = this.state
+  render () {
+    const { nameValid, validationMessages } = this.state
     return (
       <form className="newFolderForm" onSubmit={e => this.handleSubmit(e)}>
         <label htmlFor="folder">Folder Name
-        {!nameValid && (
-          <p className="error">{validationMessages.name}</p>
-        )}</label>
+          {!nameValid && (
+            <p className="error">{validationMessages.name}</p>
+          )}</label>
         <input id="folder" type="text" name="folder" onChange={e => this.setName(e.target.value)} placeholder="new folder name"></input>
-          <ValidationError hasError={!this.state.nameValid} message={this.state.validationMessages.name}/>
+        <ValidationError hasError={!this.state.nameValid} message={this.state.validationMessages.name}/>
         <button type="submit" disabled={!this.state.formValid}>Submit</button>
       </form>
     )
